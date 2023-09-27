@@ -1,0 +1,14 @@
+FROM alpine:3.18.4
+
+RUN apk update && apk add bash openssh sudo
+RUN adduser -G wheel -h /home/admin -D admin                    && \
+    mkdir -m 755 /home/admin/.ssh                               && \
+    wget -SO /home/admin/.ssh/authorized_keys                   && \
+    chown admin:wheel /home/admin/.ssh -R                       && \
+    chmod 644 /home/admin/.ssh/authorized_keys                  && \
+    echo "ADMIN ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/admin && \
+    chmod 0440 /etc/sudoers.d/admin
+
+USER admin
+ENV HOME /home/admin
+CMD sshd
