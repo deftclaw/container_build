@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# AlpineBasics .bashrc file
+
+. /etc/profile
+
+lang=( nodejs ruby )
+
+for l in ${lang[@]}
+do
+	[[ $(asdf list|grep $l) ]] || asdf plugin-add $l
+	[[ $(asdf list $l 2>&1|grep 'No versions installed')  ]] \
+	  && ( tar -xf /tmp/${l}.tbz2 ; asdf reshim $l )
+done

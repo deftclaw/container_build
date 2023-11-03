@@ -1,0 +1,23 @@
+#!/usr/bin/env dockerfile
+
+FROM alpine:3.18.4
+RUN apk add    \
+  bash         \
+  build-base   \
+  bzip2        \
+  gcc6         \
+  gdbm-dev     \
+  git          \
+  libffi-dev   \
+  ncurses-dev  \
+  openssl-dev  \
+  patch        \
+  readline-dev \
+  yaml-dev     \
+  zlib-dev
+
+RUN git clone https://github.com/asdf-vm/asdf /asdf
+RUN wget -SO /etc/profile.d/asdf.sh https://raw.githubusercontent.com/BriskBear/profile.d/release/asdf.sh
+RUN echo ". /etc/profile" >> /root/.bashrc
+
+CMD ["tail", "-f", "/dev/null"]

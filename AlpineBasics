@@ -1,0 +1,20 @@
+#!/usr/bin/env dockerfile
+FROM alpine:3.18.4
+RUN apk add bash git libstdc++ libgcc openssl-dev yaml-dev
+
+# Setup the non-root user
+WORKDIR /rails
+RUN git clone https://github.com/asdf-vm/asdf /asdf
+RUN chown root:wheel /asdf -R
+RUN chmod g+rwx /asdf -R
+RUN adduser -h /rails -s bash -G wheel -D rails
+
+# Install asdf and specified language versions
+RUN wget -SO /etc/profile.d/asdf.sh https://raw.githubusercontent.com/BriskBear/profile.d/release/asdf.sh
+COPY lib/basics /rails/.bashrc
+COPY tar/node-${NODE}.tbz2 /tmp/nodejs.tbz2
+COPY tar/ruby-${RUBY}.tbz2 /tmp/ruby.tbz2
+USER rails
+RUN ln -s /myapp /rails/current
+
+CMD ["tail -f /dev/null"]

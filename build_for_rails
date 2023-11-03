@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+langs=(CONTAINER_NAME RUBY NODE)
+
+declare -A lang_col
+lang_col[RUBY]='\033[38;5;9m'
+lang_col[NODE]='\033[38;5;70m'
+
+function confirm-set() {
+	if [[ -n ${!1} ]] 
+	then printf "${lang_col[$1]}$1\033[0m: ${!1}\n"
+	else
+		printf "${lang_col[$1]}$1\033[0m: "
+		read $1
+		export $1
+	fi
+}
+
+for l in ${langs[@]}
+do
+	confirm-set $l
+done
+
+box build -t ${CONTAINER_NAME} -f AlpineBasics .
